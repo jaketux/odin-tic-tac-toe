@@ -2,27 +2,23 @@
 const gameBoard = (function(){
 
     const gameBoardArray = [,,,,,,,,,]
+    
 
-    let playersTurn = true
-
-    const placeToken = function(location, player){
-        if (player === players[0] && playersTurn === true){
+    const placeToken = function(location, player, eligibility) {
+        if (player === players[0] && eligibility === true && gameBoardArray[location] === undefined){
         gameBoardArray.splice(location, 1, "X"),
-        playersTurn = false,
         console.log(gameBoardArray)}
-        else if (player === players[1] && playersTurn === false){
+        else if (player === players[1] && eligibility === false && gameBoardArray[location] === undefined){
         gameBoardArray.splice(location, 1, "O"),
-        playersTurn = true,
         console.log(gameBoardArray)
-        } else {console.log("Error, it's not your turn!!!"),
-            console.log(gameBoardArray) 
-        }
+        } 
     }
+
     console.log(gameBoardArray)
 
-    return {placeToken,gameBoardArray}    
+    return {placeToken}    
 
-    })()
+    })()    
 
 function createPlayers(name1,name2){
 
@@ -44,6 +40,31 @@ createPlayers("Paul", "Steve")
 
 console.log(players[0])
 console.log(players[1])
+
+const gameFlow = (function(){
+
+    let playerToggle = false 
+
+    const playerTurn = function(){
+        if (playerToggle === true) {
+            playerToggle = false;
+            return true           
+        }
+        if (playerToggle === false){
+            playerToggle = true;
+            return false
+        }
+        
+    }    
+    
+    return {playerTurn}
+
+})()
+
+
+gameBoard.placeToken(1,players[1], gameFlow.playerTurn())
+    gameBoard.placeToken(1,players[0], gameFlow.playerTurn())
+
 
 
 const checkWinner = function(gameBoardArray){
@@ -73,6 +94,6 @@ const checkWinner = function(gameBoardArray){
 // function checkWinner()
 
 
-gameBoard.placeToken(2,players[0])
+
 
 
