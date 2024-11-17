@@ -15,7 +15,7 @@
     }
 
     function gameBoard(){
-    
+            
         const gameBoardArray = [,,,,,,,,,]
 
         const getBoard = function(){
@@ -28,10 +28,10 @@
 
         const placeToken = function(location, player) {
             if (gameBoardArray[location] === undefined){
-            gameBoardArray.splice(location, 1, gameController.getActivePlayer.token),
+            gameBoardArray.splice(location, 1, player.token),
             console.log(gameBoardArray)}
             else if (player === players[1] && gameBoardArray[location] === undefined){
-            gameBoardArray.splice(location, 1, gameController.getActivePlayer.token),
+            gameBoardArray.splice(location, 1, player.token),
             console.log(gameBoardArray)
             } 
         }
@@ -103,7 +103,7 @@
 
         newRound()
 
-        return {playRound, getActivePlayer, getBoard: gameBoard.getBoard}        
+        return {playRound, getActivePlayer, getBoard: board.getBoard}        
 
     }
 
@@ -112,16 +112,52 @@
 
         const game = gameController()
 
+        const activePlayer = game.getActivePlayer();
+
         const displayBoard = function(){
 
-            let board = gameBoard.getBoard
-            const bodyOfPage = document.querySelector(body)
+            let currentBoard = game.getBoard()
+
+            const bodyOfPage = document.querySelector("body")  
+            const nextTurn = document.createElement("div")
+            nextTurn.classList.add("next-turn")
+            nextTurn.textContent = `${activePlayer.name}'s turn...`
+            bodyOfPage.appendChild(nextTurn)
+            const gameGrid = document.createElement("div")
+            gameGrid.classList.add("gamegrid")
+            bodyOfPage.appendChild(gameGrid)
+            for (i = 0; i<currentBoard.length; i++){
+            if (currentBoard[i] === undefined){
             const gameSquare = document.createElement("div")
-            gameSquare.classList.add 
+            gameSquare.classList.add("emptysquare")
+            gameSquare.id=i
+            gameSquare.addEventListener("click", function(){
+                game.playRound(gameSquare.id);
+                gameGrid.remove()
+                nextTurn.remove()
+                displayBoard()               
+            })
+            gameGrid.appendChild(gameSquare)
 
+            }
+            else if (currentBoard[i] === "X") {
+                const gameSquare = document.createElement("div")
+            gameSquare.classList.add("xsquare")
+            gameSquare.textContent="X"
+            gameGrid.appendChild(gameSquare)
 
+            } else if (currentBoard[i] === "O") {
+                const gameSquare = document.createElement("div")
+            gameSquare.classList.add("osquare")
+            gameSquare.textContent="O"
+            gameGrid.appendChild(gameSquare)
+            }
+            }
         }
-        {return game}
+
+        displayBoard()
+
+        {return game, displayBoard, activePlayer}
 
         // displayBoard
 
@@ -129,9 +165,14 @@
 
         // announceWinner
         //     - changes the DOM based on the winner. 
-
     }
 
+    const startGameBtn = document.querySelector("#start-btn")
+
+    startGameBtn.addEventListener("click",function(){
+        gameController(player1.value, player2.value)
+        displayController()
+    })
 
 
 
