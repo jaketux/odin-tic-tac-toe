@@ -1,97 +1,131 @@
 
-const gameBoard = (function(){
+    const createPlayers = function(name1,name2){
 
-    const gameBoardArray = [,,,,,,,,,]
+        function createPlayer(name){
+            const playerName = name;
+            return {playerName}
+    }
+
+        const player1 = createPlayer(name1)
+
+        const player2 = createPlayer(name2)
+
+        return players = [player1, player2]
+
+    }
+
+    function gameBoard (){
     
+        const gameBoardArray = [,,,,,,,,,]
 
-    const placeToken = function(location, player, eligibility) {
-        if (player === players[0] && eligibility === true && gameBoardArray[location] === undefined){
-        gameBoardArray.splice(location, 1, "X"),
-        console.log(gameBoardArray)}
-        else if (player === players[1] && eligibility === false && gameBoardArray[location] === undefined){
-        gameBoardArray.splice(location, 1, "O"),
+        const getBoard = function(){
+            return gameBoardArray
+        }
+
+        const printBoard = function(){
+            console.log(gameBoardArray)
+        }
+
+        const placeToken = function(location, player) {
+            if (gameBoardArray[location] === undefined){
+            gameBoardArray.splice(location, 1, game.getActivePlayer().token),
+            console.log(gameBoardArray)}
+            else if (player === players[1] && gameBoardArray[location] === undefined){
+            gameBoardArray.splice(location, 1, game.getActivePlayer().token),
+            console.log(gameBoardArray)
+            } 
+        }
         console.log(gameBoardArray)
+        return {placeToken,getBoard,printBoard}
+    }
+
+    function gameController(playerOneName,playerTwoName) {
+
+
+        const board = gameBoard()
+      
+        const players = [
+          {
+            name: playerOneName,
+            token: "X"
+          },
+          {
+            name: playerTwoName,
+            token: "O"
+          }
+        ];
+
+        let activePlayer = players[0]
+
+        const switchPlayerTurn = function(){
+            activePlayer = activePlayer === players[0] ? players[1] : players[0]  
+        }
+
+        const getActivePlayer = function(){
+            return activePlayer
+        }
+
+        const newRound = function(){
+            board.getBoard()
+        }
+
+        const checkWinner = function(){
+            let currentBoard = board.getBoard()
+            if ((currentBoard[0] && currentBoard[1] && currentBoard[2] === players[0].token) || 
+                (currentBoard[3] && currentBoard[4] && currentBoard[5] === players[0].token) || 
+                (currentBoard[6] && currentBoard[7] && currentBoard[8] === players[0].token) || 
+                (currentBoard[0] && currentBoard[3] && currentBoard[6] === players[0].token) || 
+                (currentBoard[1] && currentBoard[4] && currentBoard[7] === players[0].token) || 
+                (currentBoard[2] && currentBoard[5] && currentBoard[8] === players[0].token) || 
+                (currentBoard[0] && currentBoard[4] && currentBoard[8] === players[0].token) || 
+                (currentBoard[2] && currentBoard[4] && currentBoard[6] === players[0].token)){
+                    console.log(players[0].name+" is the winner!")
+            } else if (
+                (currentBoard[0] && currentBoard[1] && currentBoard[2] === players[1].token) || 
+                (currentBoard[3] && currentBoard[4] && currentBoard[5] === players[1].token) || 
+                (currentBoard[6] && currentBoard[7] && currentBoard[8] === players[1].token) || 
+                (currentBoard[0] && currentBoard[3] && currentBoard[6] === players[1].token) || 
+                (currentBoard[1] && currentBoard[4] && currentBoard[7] === players[1].token) || 
+                (currentBoard[2] && currentBoard[5] && currentBoard[8] === players[1].token) || 
+                (currentBoard[0] && currentBoard[4] && currentBoard[8] === players[1].token) || 
+                (currentBoard[2] && currentBoard[4] && currentBoard[6] === players[1].token)) {
+                    console.log(players[1].name+" is the winner!")
+            } else if (
+                currentBoard[0-9] !== undefined) {
+                    console.log("It's a draw!~")}
         } 
-    }
 
-    console.log(gameBoardArray)
-
-    return {placeToken}    
-
-    })()    
-
-function createPlayers(name1,name2){
-
-    function createPlayer(name){
-        const playerName = name;
-        return {playerName}
-    }
-
-    const player1 = createPlayer(name1)
-
-    const player2 = createPlayer(name2)
-
-    return players = [player1, player2]
-
-}
-
-createPlayers("Paul", "Steve")
-
-
-console.log(players[0])
-console.log(players[1])
-
-const gameFlow = (function(){
-
-    let playerToggle = false 
-
-    const playerTurn = function(){
-        if (playerToggle === true) {
-            playerToggle = false;
-            return true           
+        const playRound = function(location){
+            if (getActivePlayer() === activePlayer){
+            board.placeToken(location,activePlayer)
+            checkWinner()
+            switchPlayerTurn()
+            newRound()
+            console.log(players[0].token)
+            console.log(players[1].token)
+            }
         }
-        if (playerToggle === false){
-            playerToggle = true;
-            return false
-        }
+
+        console.log(players[0])
         
-    }    
+
+        newRound()
+
+        return {playRound, getActivePlayer}        
+
+    }
+
     
-    return {playerTurn}
-
-})()
 
 
-gameBoard.placeToken(1,players[1], gameFlow.playerTurn())
-    gameBoard.placeToken(1,players[0], gameFlow.playerTurn())
+    const game = gameController("Bob", "Whitney")
 
 
 
-const checkWinner = function(gameBoardArray){
-    if (gameBoardArray[0,1,2] === "X" || 
-        gameBoardArray[3,4,5] === "X" || 
-        gameBoardArray[6,7,8] === "X" || 
-        gameBoardArray[0,3,6] === "X" || 
-        gameBoardArray[1,4,7] === "X" || 
-        gameBoardArray[2,5,8] === "X" ||
-        gameBoardArray[0,4,8] === "X" || 
-        gameBoardArray[2,4,6] === "X"){
-            console.log(player1.playerName+" is the winner!")
-    } else if (
-        gameBoardArray[0,1,2] === "O" || 
-        gameBoardArray[3,4,5] === "O" || 
-        gameBoardArray[6,7,8] === "O" || 
-        gameBoardArray[0,3,6] === "O" || 
-        gameBoardArray[1,4,7] === "O" || 
-        gameBoardArray[2,5,8] === "O" ||
-        gameBoardArray[0,4,8] === "O" || 
-        gameBoardArray[2,4,6] === "O" ){
-            console.log(player2.playerName+" is the winner!")
-        }
-}    
 
 
-// function checkWinner()
+
+ 
 
 
 
