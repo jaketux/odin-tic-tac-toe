@@ -18,20 +18,28 @@ body{
     align-items:center;
 }
 
-h1{margin:50px 0px 10px 0px;}
+h1{
+    margin:50px 0px 10px 0px;
+}
 
-input{margin-top:var(--input-margin);
-border-radius:5px;
-border:var(--input-border);
-width:250px;
-height:30px}
+input{
+    margin-top:var(--input-margin);
+    border-radius:5px;
+    border:var(--input-border);
+    width:250px;
+    height:30px
+}
 
-label{margin-right:20px;}
+label{
+    margin-right:20px;
+}
 
-form{display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;}
+form{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
 
 #start-btn{
     margin-top: var(--input-margin);
@@ -44,12 +52,14 @@ align-items:center;}
 }
 
 
-.gamegrid{display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows:1fr 1fr 1fr;
-width: 750px;
-height: 750px;
-gap:10px;}
+.gamegrid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    width: 750px;
+    height: 750px;
+    gap:10px;
+}
 
 .emptysquare, .xsquare, .osquare{
     display:flex;
@@ -62,8 +72,10 @@ gap:10px;}
 
 }
 
-.next-turn{font-size:48px;
-margin-bottom:20px;}
+.next-turn{
+    font-size:48px;
+    margin-bottom:20px;
+}
 
 .sub-text,label{
     font-size:18px;
