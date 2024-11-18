@@ -47,17 +47,24 @@ align-items:center;}
 .gamegrid{display:grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows:1fr 1fr 1fr;
-width: 900px;
-height: 900px;
+width: 750px;
+height: 750px;
 gap:10px;}
 
 .emptysquare, .xsquare, .osquare{
     display:flex;
     justify-content: center;
     align-items:center;
-    height:300px;
-    width:300px;
+    height:250px;
+    width:250px;
     border: var(--input-border);
     font-size:100px;
 
+}
+
+.next-turn{font-size:48px;
+margin-bottom:20px;}
+
+.sub-text,label{
+    font-size:18px;
 }

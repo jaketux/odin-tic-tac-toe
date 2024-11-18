@@ -1,19 +1,3 @@
-
-    const createPlayers = function(name1,name2){
-
-        function createPlayer(name){
-            const playerName = name;
-            return {playerName}
-    }
-
-        const player1 = createPlayer(name1)
-
-        const player2 = createPlayer(name2)
-
-        return players = [player1, player2]
-
-    }
-
     function gameBoard(){
             
         const gameBoardArray = [,,,,,,,,,]
@@ -35,25 +19,27 @@
             console.log(gameBoardArray)
             } 
         }
-        console.log(gameBoardArray)
-
         return {placeToken,getBoard,printBoard}
     }
 
+    
     function gameController(playerOneName,playerTwoName) {
 
         const board = gameBoard()
+
+        const display = displayController()
       
         const players = [
-          {
-            name: playerOneName,
-            token: "X"
-          },
-          {
-            name: playerTwoName,
-            token: "O"
-          }
-        ];
+            {
+              name: playerOneName,
+              token: "X"
+            },
+            {
+              name: playerTwoName,
+              token: "O"
+            }
+          ];
+  
 
         let activePlayer = players[0]
 
@@ -80,48 +66,59 @@
                 (currentBoard[0] === activePlayer.token && currentBoard[4] === activePlayer.token && currentBoard[8] === activePlayer.token) || 
                 (currentBoard[2] === activePlayer.token && currentBoard[4] === activePlayer.token && currentBoard[6] === activePlayer.token)){
                     console.log(activePlayer.name+" is the winner!")
-                    return result = activePlayer    
+                    return activePlayer    
             } else if (
                 (currentBoard[0, 1, 2, 3, 4, 5, 6, 7, 8] !== undefined)){
                     console.log("It's a draw!")
-                return result = draw}
+                return "Draw"}
         } 
 
         const playRound = function(location){
             if (getActivePlayer() === activePlayer){
-            board.placeToken(location,activePlayer)
-            checkWinner()
+            board.placeToken(location,activePlayer)}
+            if (checkWinner() === activePlayer){
+                display.announceWinner()
+            } else if (checkWinner() === "Draw") {
+                display.announceWinner()
+            }
             switchPlayerTurn()
             newRound()
-            console.log(players[0].token)
-            console.log(players[1].token)
+            }
+                
+        const declareWinner = function(){
+            if (checkWinner() === players[0]){
+                return players[0]
+            } else if   (checkWinner() === players[1]){
+                return players[1]}
+            else if (checkWinner() === "Draw"){
+                return "Draw"
             }
         }
 
-        console.log(players[0])
-        
-
         newRound()
+        console.log(players)
 
-        return {playRound, getActivePlayer, getBoard: board.getBoard}        
+        return {playRound, getActivePlayer, getBoard: board.getBoard, checkWinner, declareWinner}        
 
     }
 
-
     function displayController(){
 
-        const game = gameController()
+        const player1 = document.querySelector('#player1')
+        const player2 = document.querySelector('#player2')
+
+        const game = gameController(player1.value,player2.value)
 
         const activePlayer = game.getActivePlayer();
 
+
         const displayBoard = function(){
-
+            game.getActivePlayer()
             let currentBoard = game.getBoard()
-
             const bodyOfPage = document.querySelector("body")  
             const nextTurn = document.createElement("div")
             nextTurn.classList.add("next-turn")
-            nextTurn.textContent = `${activePlayer.name}'s turn...`
+            nextTurn.textContent = `${game.getActivePlayer().name}'s turn...`
             bodyOfPage.appendChild(nextTurn)
             const gameGrid = document.createElement("div")
             gameGrid.classList.add("gamegrid")
@@ -135,6 +132,7 @@
                 game.playRound(gameSquare.id);
                 gameGrid.remove()
                 nextTurn.remove()
+                console.log(game.getActivePlayer().name)
                 displayBoard()               
             })
             gameGrid.appendChild(gameSquare)
@@ -155,9 +153,47 @@
             }
         }
 
+        const announceWinner = function(){
+            nextTurn.remove()
+            const winner = game.declareWinner()
+            const bodyOfPage = document.querySelector("body")  
+            const xGameSquares = document.querySelectorAll(".xsquare")
+            const oGameSquares = document.querySelectorAll(".osquare")
+            if (winner === players[0]){
+                const winnerText = document.createElement("div")
+                winnerText.classList.add("winner-text")
+                winnerText.textContent = `${winner.name} is the winner! Press "Start Game" to play again`
+                bodyOfPage.append(winnerText)
+                for (oGameSquare of oGameSquares){
+                    oGameSquare.style.opacity = "0.5"
+                }
+            } else if (winner === players[1]){
+                const winnerText = document.createElement("div")
+                winnerText.classList.add("winner-text")
+                winnerText.textContent = `${winner.name} is the winner! Press "Start Game" to play again`
+                bodyOfPage.append(winnerText)
+                for (xGameSquare of xGameSquares){
+                    xGameSquare.style.opacity = "0.5"
+                }
+            } else if (winner === "Draw"){
+                const winnerText = document.createElement("div")
+                winnerText.classList.add("winner-text")
+                winnerText.textContent = `It's a Draw! Press "Start Game" to play again`
+                bodyOfPage.append(winnerText)
+                for (xGameSquare of xGameSquares){
+                    xGameSquare.style.opacity = "0.5"
+                }
+
+                for (oGameSquare of oGameSquares){
+                    oGameSquare.style.opacity = "0.5"
+                }
+            }
+
+        }
+
         displayBoard()
 
-        {return game, displayBoard, activePlayer}
+        {return game, displayBoard, activePlayer, announceWinner}
 
         // displayBoard
 
@@ -170,9 +206,11 @@
     const startGameBtn = document.querySelector("#start-btn")
 
     startGameBtn.addEventListener("click",function(){
-        gameController(player1.value, player2.value)
         displayController()
+        console.log(player1,player2)
     })
+
+
 
 
 
