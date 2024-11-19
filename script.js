@@ -3,111 +3,133 @@
 
             const player1 = document.querySelector('#player1')
             const player2 = document.querySelector('#player2')
+
+
+
     
             const game = gameController(player1.value,player2.value)
-    
-            const players = game.players
-    
-            const activePlayer = game.getActivePlayer();
-    
-            const winner = game.declareWinner()
-    
-    
+
             const displayBoard = function(){
-                game.getActivePlayer()
+
+                let winnerOfGame = game.returnWinner()
+
+                const players = game.getPlayers()
+                const activePlayer = game.getActivePlayer();
                 let currentBoard = game.getBoard()
+                if (winnerOfGame === 0) {                    
                 const bodyOfPage = document.querySelector("body")  
-                const nextTurn = document.createElement("div")
-                nextTurn.classList.add("next-turn")
-                nextTurn.textContent = `${game.getActivePlayer().name}'s turn...`
-                bodyOfPage.appendChild(nextTurn)
+                const turnText = document.createElement("div")
+                turnText.classList.add("turn-text")
+                turnText.textContent =`${activePlayer.name}'s turn!`
+                bodyOfPage.appendChild(turnText)
                 const gameGrid = document.createElement("div")
                 gameGrid.classList.add("gamegrid")
                 bodyOfPage.appendChild(gameGrid)
                 for (i = 0; i<currentBoard.length; i++){
-                if (currentBoard[i] === undefined){
-                const gameSquare = document.createElement("div")
-                gameSquare.classList.add("emptysquare")
-                gameSquare.id=i
-                gameSquare.addEventListener("click", function(){
-                    game.playRound(gameSquare.id)
-``                    
-                })
-                gameGrid.appendChild(gameSquare)
-    
-                }
-                else if (currentBoard[i] === "X") {
+                    if (currentBoard[i] === undefined){
                     const gameSquare = document.createElement("div")
-                gameSquare.classList.add("xsquare")
-                gameSquare.textContent="X"
-                gameGrid.appendChild(gameSquare)
-    
+                    gameSquare.classList.add("emptysquare")
+                    gameSquare.id=i
+                    gameGrid.appendChild(gameSquare)
+                    gameSquare.addEventListener("click", function(){
+                        game.playRound(gameSquare.id)
+                        gameGrid.remove()
+                        turnText.remove()
+                        console.log(winnerOfGame)
+                        displayBoard()
+                    }) 
+                } else if (currentBoard[i] === "X") {
+                    const gameSquare = document.createElement("div")
+                    gameSquare.classList.add("xsquare")
+                    gameSquare.textContent="X"
+                    gameGrid.appendChild(gameSquare)
                 } else if (currentBoard[i] === "O") {
-                    const gameSquare = document.createElement("div")
+                const gameSquare = document.createElement("div")
                 gameSquare.classList.add("osquare")
                 gameSquare.textContent="O"
                 gameGrid.appendChild(gameSquare)
                 }
                 }
+            } else if ((winnerOfGame === players[0]) || 
+                        (winnerOfGame === players[1])) {
+                const bodyOfPage = document.querySelector("body")
+                const turnText = document.createElement("div")
+                turnText.classList.add("turn-text")
+                turnText.textContent =`${winnerOfGame.name} has won the game!`
+                bodyOfPage.appendChild(turnText)
+                const gameGrid = document.createElement("div")
+                gameGrid.classList.add("gamegrid")
+                bodyOfPage.appendChild(gameGrid)
+                for (i = 0; i<currentBoard.length; i++){
+                    if (currentBoard[i] === undefined){
+                    const gameSquare = document.createElement("div")
+                    gameSquare.classList.add("emptysquare")
+                    gameSquare.id=i
+                    gameGrid.appendChild(gameSquare)
+                    } else if (currentBoard[i] === "X") {
+                    const gameSquare = document.createElement("div")
+                    gameSquare.classList.add("xsquare")
+                    gameSquare.textContent="X"
+                    if (winnerOfGame === players[1]){
+                        gameSquare.style.opacity="0.5"
+                    }
+                    gameGrid.appendChild(gameSquare)
+                    } else if (currentBoard[i] === "O") {
+                    const gameSquare = document.createElement("div")
+                    gameSquare.classList.add("osquare")
+                    gameSquare.textContent="O"
+                    if (winnerOfGame === players[0]){
+                        gameSquare.style.opacity="0.5"
+                    }
+
+                    gameGrid.appendChild(gameSquare)
+                    }
+            } 
+            } else if (winnerOfGame === "Draw"){
+                const bodyOfPage = document.querySelector("body")
+                    const turnText = document.createElement("div")
+                    turnText.classList.add("turn-text")
+                    turnText.textContent =`It's a draw! Press "Restart Game to Play Again!`
+                    bodyOfPage.appendChild(turnText)
+                    const gameGrid = document.createElement("div")
+                    gameGrid.classList.add("gamegrid")
+                    bodyOfPage.appendChild(gameGrid)
+                    for (i = 0; i<currentBoard.length; i++){
+                        if (currentBoard[i] === undefined){
+                        const gameSquare = document.createElement("div")
+                        gameSquare.classList.add("emptysquare")
+                        gameSquare.id=i
+                        gameGrid.appendChild(gameSquare)
+                        } else if (currentBoard[i] === "X") {
+                        const gameSquare = document.createElement("div")
+                        gameSquare.classList.add("xsquare")
+                        gameSquare.textContent="X"
+                        gameSquare.style.opacity="0.5"
+                        gameGrid.appendChild(gameSquare)
+                        } else if (currentBoard[i] === "O") {
+                        const gameSquare = document.createElement("div")
+                        gameSquare.classList.add("osquare")
+                        gameSquare.textContent="O"
+                        gameSquare.style.opacity="0.5"
+                        gameGrid.appendChild(gameSquare)
+                        }
+                    }
             }
-    
-            const announceWinner = function(){
-                const bodyOfPage = document.querySelector("body")  
-                const xGameSquares = document.querySelectorAll(".xsquare")
-                const oGameSquares = document.querySelectorAll(".osquare")
-                const gameGrid = document.querySelector('.gamegrid')
-                const nextTurn = document.querySelector('.next-turn')
-                if (game.checkWinner() === undefined){
-                    gameGrid.remove()
-                    nextTurn.remove()
-                    displayBoard()
-                } else if (game.checkWinner() === players[0]){
-                    nextTurn.remove()
-                    const winnerText = document.createElement("div")
-                    winnerText.classList.add("winner-text")
-                    winnerText.textContent = `${winner.name} is the winner! Press "Start Game" to play again`
-                    bodyOfPage.append(winnerText)
-                    for (oGameSquare of oGameSquares){
-                        oGameSquare.style.opacity = "0.5"
-                    }
-                    console.log(winner)
-                } else if (game.checkWinner() === players[1]){
-                    nextTurn.remove()
-                    const winnerText = document.createElement("div")
-                    winnerText.classList.add("winner-text")
-                    winnerText.textContent = `${winner.name} is the winner! Press "Start Game" to play again`
-                    bodyOfPage.append(winnerText)
-                    for (xGameSquare of xGameSquares){
-                        xGameSquare.style.opacity = "0.5"
-                    }
-                } else if (winner === "Draw"){
-                    nextTurn.remove()
-                    const winnerText = document.createElement("div")
-                    winnerText.classList.add("winner-text")
-                    winnerText.textContent = `It's a Draw! Press "Start Game" to play again`
-                    bodyOfPage.append(winnerText)
-                    for (xGameSquare of xGameSquares){
-                        xGameSquare.style.opacity = "0.5"
-                    }
-    
-                    for (oGameSquare of oGameSquares){
-                        oGameSquare.style.opacity = "0.5"
-                    }
-                }
-            }
-    
-            displayBoard()
-    
-            {return game, displayBoard, activePlayer, announceWinner}
-    
         }
+        
+        displayBoard()
+
+        {return game, displayBoard}
+
+    }
+
     
-        const startGameBtn = document.querySelector("#start-btn")
-    
-        startGameBtn.addEventListener("click",function(){
-            displayController()
-            console.log(player1,player2)
-        })
+    const startGameBtn = document.querySelector("#start-btn")
+
+    startGameBtn.addEventListener("click",function(){
+        displayController()
+        startGameBtn.disabled=true
+    })
     
     function gameBoard(){
             
@@ -125,7 +147,7 @@
             if (gameBoardArray[location] === undefined){
             gameBoardArray.splice(location, 1, player.token),
             console.log(gameBoardArray)}
-            else if (player === players[1] && gameBoardArray[location] === undefined){
+            else if (gameBoardArray[location] === undefined){
             gameBoardArray.splice(location, 1, player.token),
             console.log(gameBoardArray)
             } 
@@ -137,9 +159,7 @@
     function gameController(playerOneName,playerTwoName) {
 
         const board = gameBoard()
-
-        const displayController = displayController()
-
+ 
         const players = [
             {
               name: playerOneName,
@@ -151,6 +171,9 @@
             }
           ];
   
+        const getPlayers = function(){
+            return players
+        }
 
         let activePlayer = players[0]
 
@@ -166,6 +189,8 @@
             board.getBoard()
         }
 
+        let winnerOfGame = 0
+
         const checkWinner = function(){
             let currentBoard = board.getBoard()
             if ((currentBoard[0] === activePlayer.token && currentBoard[1] === activePlayer.token && currentBoard[2] === activePlayer.token) || 
@@ -176,49 +201,32 @@
                 (currentBoard[2] === activePlayer.token && currentBoard[5] === activePlayer.token && currentBoard[8] === activePlayer.token) ||  
                 (currentBoard[0] === activePlayer.token && currentBoard[4] === activePlayer.token && currentBoard[8] === activePlayer.token) || 
                 (currentBoard[2] === activePlayer.token && currentBoard[4] === activePlayer.token && currentBoard[6] === activePlayer.token)){
-                    return activePlayer    
-            } else if (
-                (currentBoard[0, 1, 2, 3, 4, 5, 6, 7, 8] !== undefined)){
-                return "Draw"}
+                    winnerOfGame = activePlayer
+
+            } else if ((currentBoard[0, 1, 2, 3, 4, 5, 6, 7, 8] !== undefined)){
+                    winnerOfGame = "Draw"
+
+
+            } 
         } 
+
+        const returnWinner = function(){
+            return winnerOfGame
+        }
 
         const playRound = function(location){
             if (getActivePlayer() === activePlayer){
-            board.placeToken(location,activePlayer)}
-            if (checkWinner() === activePlayer){
-                declareWinner()
-            } else if (checkWinner() === "Draw") {
-                declareWinner()
-            } else {
+            board.placeToken(location,activePlayer)
+            checkWinner()
             switchPlayerTurn()
             newRound()
             }
-            }
-                        
-        const declareWinner = function(){
-            if (checkWinner() === players[0]){
-                displayController.announceWinner()
-            } else if   (checkWinner() === players[1]){
-                displayController.announceWinner()
-            }         else if (checkWinner() === "Draw"){
-                displayController.announceWinner()
-            }
+            console.log(returnWinner())
+            
         }
 
         newRound()
-        return {playRound, getActivePlayer, getBoard: board.getBoard, checkWinner, declareWinner}        
+
+        return {playRound, getActivePlayer, getPlayers, getBoard: board.getBoard, checkWinner, returnWinner}        
 
     }
-
-
-
-
-
-
-
- 
-
-
-
-
-
