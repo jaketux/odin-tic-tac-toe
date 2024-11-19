@@ -19,8 +19,11 @@ body{
 }
 
 h1{
+    font-size:48px;
     margin:50px 0px 10px 0px;
 }
+
+
 
 input{
     margin-top:var(--input-margin);
@@ -73,10 +76,26 @@ form{
 }
 
 .turn-text{
-    font-size:48px;
-    margin-bottom:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:36px;
+    margin-bottom:15px;
 }
 
 .sub-text,label{
-    font-size:18px;
+    font-size:24px;
+}
+
+#player2{
+    margin-bottom:var(--input-margin)
+}
+
+.restartbutton{
+    margin-bottom:var(--input-margin);
+    margin-top:0px;
+    width:125px;
+    height:25px;
+    border-radius:5px;
+    border:var(--input-border);
 }
